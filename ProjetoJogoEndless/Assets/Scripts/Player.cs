@@ -16,7 +16,11 @@ public class Player : MonoBehaviour
     float sentidox;
     [SerializeField]
     float jumpforce;
-    
+    [SerializeField]
+    bool estaNoSoloOuPlataforma;
+    [SerializeField]
+    bool estaNaParede;
+
 
 
     // Start is called before the first frame update
@@ -49,15 +53,41 @@ public class Player : MonoBehaviour
         else
             sentidox = -1;
             */
+        estaNaParede = false;
     }
 
     private void FixedUpdate()
     {
-        Vector2 velocity = new Vector2(sentidox * speed * Time.deltaTime, body.velocity.y);
-        body.velocity = velocity;
+        if (!estaNaParede)
+        {
+            Vector2 velocity = new Vector2(sentidox * speed * Time.deltaTime, body.velocity.y);
+            body.velocity = velocity;
+        }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && estaNoSoloOuPlataforma)
+        {
             body.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
+            estaNoSoloOuPlataforma = false;
+        }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.CompareTag("ParedeLateral") && !estaNaParede)
+        {
+            estaNaParede = true;
+            print("colidiu na parede");
+        }
+
+        if((collision.gameObject.CompareTag("Solo") || collision.gameObject.CompareTag("Plataforma")) && !estaNoSoloOuPlataforma)
+        {
+            estaNoSoloOuPlataforma = true;
+            print("colidiu no solo ou plataforma");
+
+        }
+    }
+
+
 }
 
