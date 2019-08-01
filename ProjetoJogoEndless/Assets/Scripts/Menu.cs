@@ -20,8 +20,8 @@ public class Menu : MonoBehaviour
 
     public void loadGameScene()
     {
-        print("ansdhbdvsf");
-        SceneManager.LoadScene("Game");
+        print("jogo");
+        SceneManager.LoadScene("Jogo");
     }
 
     public void gameExit()
