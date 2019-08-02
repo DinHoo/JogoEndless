@@ -8,6 +8,9 @@ TagManager:
   - ParedeLateral
   - Plataforma
   - Spawn
+  - Projetil
+  - Placar
+  - Game
   layers:
   - Default
   - TransparentFX

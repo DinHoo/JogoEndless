@@ -5,11 +5,33 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     Rigidbody2D body;
-    
+
+    [SerializeField]
+    Game game_ref;
     [SerializeField]
     float speed;
     [SerializeField]
-    float life;
+    private int life;
+    public int Life
+    {
+        get { return life; }
+
+        set
+        {
+            if (value < 0)
+            {
+                life = 0; //game over acionar
+            }
+            else if(value > maxLife)
+            {
+                life = maxLife;
+            }
+            else
+            life = value;
+            game_ref.updateVidaUI(life);
+        }
+
+    }
     [SerializeField]
     bool sentidoDireita;
     [SerializeField]
@@ -21,16 +43,20 @@ public class Player : MonoBehaviour
     [SerializeField]
     bool estaNaParede;
 
+    int maxLife = 3;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = 200;
-        life = 3;
-        sentidoDireita = false;
+        Life = maxLife;
         toggleSentido();
         body = GetComponent<Rigidbody2D>();
+
+        if(!game_ref || game_ref == null)
+        {
+            game_ref = GameObject.FindGameObjectWithTag("Game").GetComponent<Game>();
+        }
     }
 
     // Update is called once per frame
@@ -86,8 +112,18 @@ public class Player : MonoBehaviour
             print("colidiu no solo ou plataforma");
 
         }
+
+        
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Projetil"))
+        {
+            print("tiro");
+            Life--;
+        }
+    }
 
 }
 
