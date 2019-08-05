@@ -6,22 +6,50 @@ public class Projetil : MonoBehaviour
 {
     Rigidbody2D bodyProjetil;
 
+    Game gameRef;
+
+    private float speedP_inicial = 80;
     [SerializeField]
-    float speed;
+    private float speedP;
+    public float SpeedP
+    {
+        get { return speedP; }
+
+        set
+        {
+            if (value < speedP_inicial)
+            {
+                speedP = speedP_inicial; //game over acionar
+            }
+            else
+                speedP = value;
+        }
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         bodyProjetil = GetComponent<Rigidbody2D>();
+        SpeedP = speedP_inicial;
 
+        if (!gameRef || gameRef == null)
+            gameRef = GameObject.FindGameObjectWithTag("Game").GetComponent<Game>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 velocity = new Vector2(0, -1 * speed * Time.deltaTime);
+        Vector2 velocity = new Vector2(0, -1 * SpeedP * Time.deltaTime);
         bodyProjetil.velocity = velocity;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Solo"))
+        {
+            gameRef.addtopool(this);
 
+        }
+    }
 }
