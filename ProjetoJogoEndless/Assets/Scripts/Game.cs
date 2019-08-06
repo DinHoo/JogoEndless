@@ -48,6 +48,7 @@ public class Game : MonoBehaviour
 
     }
 
+
     //////////////////////////////////////////////////
     /// Array pra função geradora de posições
     /// 
@@ -91,6 +92,17 @@ public class Game : MonoBehaviour
     //////////////////////////////////////////////////////////////////////////////////////
     /// Projetil
     ///
+    //Função principal
+    public void spanwProjetil(int num, int[] posicoes, float velocidade)
+    {
+        if (num > posicoes.Length)
+            return;
+        for (int i = 0; i < posicoes.Length; i++)
+        {
+            spawnProjetil(posicoes[i], velocidade);
+        }
+    }
+
     void spawnProjetil(int id, float velocidade)
     {
         if(poolProjetils.Count > 0)
@@ -117,15 +129,7 @@ public class Game : MonoBehaviour
 
     }
 
-    public void spanwProjetil(int num, int[] posicoes, float velocidade)
-    {
-        if (num > posicoes.Length)
-            return;
-        for(int i = 0; i<posicoes.Length; i++)
-        {
-            spawnProjetil(posicoes[i], velocidade);
-        }
-    }
+
 
     public void addtopool(Projetil p)
     {
@@ -137,24 +141,28 @@ public class Game : MonoBehaviour
         else
             Destroy(p.gameObject);
     }
-    
+
     ///////////////////////////////////////////////////////////////////////
     /// Gerador de posições
-    /// 
+    /// Recebe um número pra quantidade de projetils a serem spawnados e um array de transform dos pontos de spawn
+    /// Retorna um array de inteiros contendo as posiçoes
+    /// exemplo: geraPosicoes(3, arraySpawns); é um array de transforme contendo as posiçoes de spawn
     int[] geraPosicoes(int quantidade, Transform[] spawns)
     {
-        int[] posicoes = new int[quantidade];
-        for (int i = 0; i < quantidade; i++)
+        int[] posicoes = new int[quantidade]; /// cria um array de inteiros que vai receber as posições
+
+        for (int i = 0; i < quantidade; i++) ///for pra encher o array com -1 pq ele inicia zerado e complica pois uso valor zero
         {
             posicoes[i] = -1;
         }
+
         int aux;
-        for(int i = 0; i<quantidade; i++)
+        for(int i = 0; i<quantidade; i++)  ///for pra preencher o array de inteiros com numeros de 0 a 5
         {
             aux = Random.Range(0, spawns.Length);
             print("antes do while" + aux);
             
-            while(System.Array.Exists(posicoes, x => x == aux))
+            while(System.Array.Exists(posicoes, x => x == aux))  ///como os valores não podem repetir, caso o random encontra o mesmo valor ele entra no while pra gerar outro que ainda não está na lista
             {
                 aux = Random.Range(0, spawns.Length);
                 print("dentro do while"+ aux);
