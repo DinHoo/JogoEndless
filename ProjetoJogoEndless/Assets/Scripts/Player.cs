@@ -103,13 +103,13 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("ParedeLateral") && !estaNaParede)
         {
             estaNaParede = true;
-            print("colidiu na parede");
+            //print("colidiu na parede");
         }
 
         if((collision.gameObject.CompareTag("Solo") || collision.gameObject.CompareTag("Plataforma")) && !estaNoSoloOuPlataforma)
         {
             estaNoSoloOuPlataforma = true;
-            print("colidiu no solo ou plataforma");
+            //print("colidiu no solo ou plataforma");
 
         }
 
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Projetil"))
         {
-            print("tiro");
+            //print("tiro");
             Life--;
         }
     }

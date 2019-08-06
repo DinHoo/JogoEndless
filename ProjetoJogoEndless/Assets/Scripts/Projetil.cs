@@ -8,7 +8,7 @@ public class Projetil : MonoBehaviour
 
     Game gameRef;
 
-    private float speedP_inicial = 80;
+    public static float speedP_inicial = 80;
     [SerializeField]
     private float speedP;
     public float SpeedP
@@ -31,7 +31,7 @@ public class Projetil : MonoBehaviour
     void Start()
     {
         bodyProjetil = GetComponent<Rigidbody2D>();
-        SpeedP = speedP_inicial;
+        
 
         if (!gameRef || gameRef == null)
             gameRef = GameObject.FindGameObjectWithTag("Game").GetComponent<Game>();
@@ -49,7 +49,7 @@ public class Projetil : MonoBehaviour
         if(collision.gameObject.CompareTag("Solo"))
         {
             gameRef.addtopool(this);
-
+            gameRef.Pontos++;
         }
     }
 }

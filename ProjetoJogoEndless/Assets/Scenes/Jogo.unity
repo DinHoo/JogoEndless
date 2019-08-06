@@ -1370,6 +1370,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00cfc226f2bbf64280d4edb6aef33fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intervaloSpawn: 3
+  intervaloQuantidade: 10
+  poolMax: 9
   arraySpawns:
   - {fileID: 0}
   - {fileID: 0}
@@ -1381,6 +1384,7 @@ MonoBehaviour:
   textoVida: {fileID: 1101986123}
   textoPontos: {fileID: 173407185}
   pontos: 0
+  taxa: 0.5
 --- !u!4 &1927760990
 Transform:
   m_ObjectHideFlags: 0

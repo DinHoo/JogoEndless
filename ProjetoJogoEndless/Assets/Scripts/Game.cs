@@ -6,10 +6,23 @@ using TMPro;
 
 public class Game : MonoBehaviour
 {
+    //CONSTANTES
+    const int MAXLINHA = 4;
+    //////////////////////////////////////////////////////////////
+    /// Timers
+    [Header("Timers")]
+    float timerSpawnBase;
+    [SerializeField]
+    float intervaloSpawn;
+
+    float timerQuantidadeBase;
+    [SerializeField]
+    float intervaloQuantidade;
     //////////////////////////////////////////////////////////////
     /// Queue
     Queue<Projetil> poolProjetils = new Queue<Projetil>();
-    int poolMax = 15;
+    [SerializeField]
+    int poolMax = 9;
 
     [SerializeField]
     Transform[] arraySpawns;
@@ -22,6 +35,7 @@ public class Game : MonoBehaviour
     /////////////////////////
     /// Interface
     int pontosInicial = 0000;
+    [Header("Interace")]
     [SerializeField]
     public TextMeshProUGUI textoVida;
     [SerializeField]
@@ -53,13 +67,23 @@ public class Game : MonoBehaviour
     /// Array pra função geradora de posições
     /// 
     int[] posicao;
+
+    ///////////////////////////////////////////////////////
+    /// Variaveis pra spawnar
+    int quantidade;
+    float velocidade = Projetil.speedP_inicial;
+    [SerializeField]
     
+    float taxa;
 
 
     // Start is called before the first frame update
     void Start()
     {
         Pontos = pontosInicial; //zerar o score
+
+        timerSpawnBase = Time.time;
+        quantidade = 1;
 
         if (GameObject.FindGameObjectWithTag("Spawn")) // Achar os spawns
         {
@@ -72,16 +96,34 @@ public class Game : MonoBehaviour
             arraySpawns = spawnPointProjetil.ToArray();
         }
 
-
-        spanwProjetil(4, geraPosicoes(4, arraySpawns), 80);
-
+        spanwProjetil(quantidade, geraPosicoes(quantidade, arraySpawns), velocidade);
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Time.time >= timerSpawnBase + intervaloSpawn)
+        {
+            spanwProjetil(quantidade, geraPosicoes(quantidade, arraySpawns), velocidade);
+            timerSpawnBase = Time.time;
+            velocidade+= 10;
+        }
 
+        if (Time.time >= timerQuantidadeBase + intervaloQuantidade)
+        {
+            timerQuantidadeBase = Time.time;
+            if(quantidade < MAXLINHA)
+            {
+                quantidade++;
+                if (intervaloSpawn - taxa > 0)
+                    intervaloSpawn -= taxa;
+                else
+                    intervaloSpawn = 0.1f;
+            }
+            
+            
+        }
     }
 
     public void updateVidaUI(int vida)
@@ -107,7 +149,7 @@ public class Game : MonoBehaviour
     {
         if(poolProjetils.Count > 0)
         {
-            print("respawn pool");
+            //print("respawn pool");
             respawn(id, velocidade);
         }
         else
@@ -137,9 +179,13 @@ public class Game : MonoBehaviour
         {
             p.transform.position = Vector3.up * 8000;
             poolProjetils.Enqueue(p);
+            print("movido pra queue");
         }
         else
+        {
             Destroy(p.gameObject);
+            print("destruido");
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -160,12 +206,12 @@ public class Game : MonoBehaviour
         for(int i = 0; i<quantidade; i++)  ///for pra preencher o array de inteiros com numeros de 0 a 5
         {
             aux = Random.Range(0, spawns.Length);
-            print("antes do while" + aux);
+            //print("antes do while" + aux);
             
             while(System.Array.Exists(posicoes, x => x == aux))  ///como os valores não podem repetir, caso o random encontra o mesmo valor ele entra no while pra gerar outro que ainda não está na lista
             {
                 aux = Random.Range(0, spawns.Length);
-                print("dentro do while"+ aux);
+                //print("dentro do while"+ aux);
             }
             posicoes[i] = aux;
         }
