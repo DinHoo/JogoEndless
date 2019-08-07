@@ -10,7 +10,8 @@ public class Menu : MonoBehaviour
 
     void Start()
     {
-
+        Screen.orientation = ScreenOrientation.Portrait;
+        Screen.SetResolution(1080, 1920, true);
     }
 
     void Update()

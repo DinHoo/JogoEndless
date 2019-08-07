@@ -8,8 +8,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     Game game_ref;
-    [SerializeField]
-    float speed;
+    ///////////////////////////////////////
+    ///Vida
+    int maxLife = 3;
     [SerializeField]
     private int life;
     public int Life
@@ -32,19 +33,21 @@ public class Player : MonoBehaviour
         }
 
     }
+    //////////////////////////////////////////////////
+    ///mudar sentido
     [SerializeField]
     bool sentidoDireita;
     [SerializeField]
     float sentidox;
     [SerializeField]
-    float jumpforce;
-    [SerializeField]
-    bool estaNoSoloOuPlataforma;
-    [SerializeField]
     bool estaNaParede;
-
-    int maxLife = 3;
-
+    ////////////////////////////////////////////////////
+    ///velocidade
+    [SerializeField]
+    float aceleracao;
+    [SerializeField]
+    float velocidadeMax;
+    Vector2 velocidade = new Vector2(0, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -62,10 +65,19 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F))
             toggleSentido();
-        
+#endif
 
+#if UNITY_ANDROID
+        if (Input.touches.Length == 1)
+        {
+            if(Input.touches[0].phase == TouchPhase.Began)
+                toggleSentido();
+        }
+            
+#endif
     }
 
     void toggleSentido()
@@ -86,15 +98,23 @@ public class Player : MonoBehaviour
     {
         if (!estaNaParede)
         {
-            Vector2 velocity = new Vector2(sentidox * speed * Time.deltaTime, body.velocity.y);
-            body.velocity = velocity;
+            
+            if (body.velocity.magnitude < velocidadeMax)
+            {
+                 velocidade += new Vector2 (sentidox * aceleracao, 0);
+                 body.AddForce(velocidade, ForceMode2D.Impulse);
+                 print(body.velocity.magnitude);
+
+            }
+            /*
+           Vector2 velocity = new Vector2(sentidox * aceleracao * Time.deltaTime, body.velocity.y);
+           body.AddForce(velocity, ForceMode2D.Impulse);
+           */
+            
+
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && estaNoSoloOuPlataforma)
-        {
-            body.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
-            estaNoSoloOuPlataforma = false;
-        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -106,13 +126,7 @@ public class Player : MonoBehaviour
             //print("colidiu na parede");
         }
 
-        if((collision.gameObject.CompareTag("Solo") || collision.gameObject.CompareTag("Plataforma")) && !estaNoSoloOuPlataforma)
-        {
-            estaNoSoloOuPlataforma = true;
-            //print("colidiu no solo ou plataforma");
-
-        }
-
+       
         
     }
 

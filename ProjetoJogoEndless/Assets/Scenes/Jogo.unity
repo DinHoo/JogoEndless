@@ -1487,7 +1487,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 10
@@ -1571,10 +1571,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   game_ref: {fileID: 1927760989}
-  speed: 200
   life: 3
   sentidoDireita: 0
   sentidox: 0
-  jumpforce: 20
-  estaNoSoloOuPlataforma: 0
   estaNaParede: 0
+  aceleracao: 0.005
+  velocidadeMax: 8

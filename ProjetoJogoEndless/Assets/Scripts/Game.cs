@@ -73,8 +73,8 @@ public class Game : MonoBehaviour
     int quantidade;
     float velocidade = Projetil.speedP_inicial;
     [SerializeField]
-    
     float taxa;
+    
 
 
     // Start is called before the first frame update
@@ -92,6 +92,7 @@ public class Game : MonoBehaviour
             foreach (Transform filho in GameObject.FindGameObjectWithTag("Spawn").transform)
             {
                 spawnPointProjetil.Add(filho);
+                print("setou spawn");
             }
             arraySpawns = spawnPointProjetil.ToArray();
         }
@@ -107,19 +108,20 @@ public class Game : MonoBehaviour
         {
             spanwProjetil(quantidade, geraPosicoes(quantidade, arraySpawns), velocidade);
             timerSpawnBase = Time.time;
-            velocidade+= 10;
+            velocidade++;
         }
 
         if (Time.time >= timerQuantidadeBase + intervaloQuantidade)
         {
             timerQuantidadeBase = Time.time;
+            velocidade++;
             if(quantidade < MAXLINHA)
             {
                 quantidade++;
-                if (intervaloSpawn - taxa > 0)
+                if (intervaloSpawn - taxa > 1)
                     intervaloSpawn -= taxa;
                 else
-                    intervaloSpawn = 0.1f;
+                    intervaloSpawn = 1f;
             }
             
             

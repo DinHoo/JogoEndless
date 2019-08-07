@@ -9,6 +9,7 @@ public class Projetil : MonoBehaviour
     Game gameRef;
 
     public static float speedP_inicial = 80;
+    public static float speedP_Max = 100;
     [SerializeField]
     private float speedP;
     public float SpeedP
@@ -20,6 +21,10 @@ public class Projetil : MonoBehaviour
             if (value < speedP_inicial)
             {
                 speedP = speedP_inicial; //game over acionar
+            }
+            else if(value > speedP_Max)
+            {
+                speedP = speedP_Max;
             }
             else
                 speedP = value;
