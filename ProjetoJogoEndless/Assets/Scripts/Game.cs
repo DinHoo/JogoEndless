@@ -81,7 +81,7 @@ public class Game : MonoBehaviour
     ///////////////////////////////////////////////////////
     /// Variaveis pra spawnar
     int quantidade;
-    float velocidade = Projetil.speedP_inicial;
+    float velocidade;
     [SerializeField]
     float taxa;
     
@@ -95,6 +95,7 @@ public class Game : MonoBehaviour
         timerSpawnBase = Time.time;
         timerQuantidadeBase = Time.time;
         quantidade = 1;
+        velocidade = Projetil.speedP_inicial;
 
         if (GameObject.FindGameObjectWithTag("Spawn")) // Achar os spawns
         {
