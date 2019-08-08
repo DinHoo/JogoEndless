@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class Game : MonoBehaviour
 {
     //CONSTANTES
@@ -40,6 +40,12 @@ public class Game : MonoBehaviour
     public TextMeshProUGUI textoVida;
     [SerializeField]
     public TextMeshProUGUI textoPontos;
+    [SerializeField]
+    public TextMeshProUGUI textoPontosFinais;
+
+    [SerializeField]
+    GameObject retrybunda;
+    public bool vivo;
 
     [SerializeField]
     private int pontos;
@@ -49,14 +55,18 @@ public class Game : MonoBehaviour
 
         set
         {
-            if (value < 0)
+            if (vivo)
             {
-                pontos = pontosInicial; //game over acionar
-            }
-           else
-                pontos = value;
+                if (value < 0)
+                {
+                    pontos = pontosInicial; //game over acionar
+                }
+                else
+                    pontos = value;
 
-            textoPontos.text = "Score: " + pontos.ToString("0000");
+                textoPontos.text = "Score: " + pontos.ToString("0000");
+            }
+            
             
         }
 
@@ -81,7 +91,7 @@ public class Game : MonoBehaviour
     void Start()
     {
         Pontos = pontosInicial; //zerar o score
-
+        vivo = true;
         timerSpawnBase = Time.time;
         quantidade = 1;
 
@@ -104,29 +114,32 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.time >= timerSpawnBase + intervaloSpawn)
+        if (vivo)
         {
-            spanwProjetil(quantidade, geraPosicoes(quantidade, arraySpawns), velocidade);
-            timerSpawnBase = Time.time;
-            velocidade++;
-        }
-
-        if (Time.time >= timerQuantidadeBase + intervaloQuantidade)
-        {
-            timerQuantidadeBase = Time.time;
-            velocidade++;
-            if(quantidade < MAXLINHA)
+            if (Time.time >= timerSpawnBase + intervaloSpawn)
             {
-                quantidade++;
-                if (intervaloSpawn - taxa > 1)
-                    intervaloSpawn -= taxa;
-                else
-                    intervaloSpawn = 1f;
+                spanwProjetil(quantidade, geraPosicoes(quantidade, arraySpawns), velocidade);
+                timerSpawnBase = Time.time;
+                velocidade++;
             }
-            
-            
+
+            if (Time.time >= timerQuantidadeBase + intervaloQuantidade)
+            {
+                timerQuantidadeBase = Time.time;
+                velocidade++;
+                if (quantidade < MAXLINHA)
+                {
+                    quantidade++;
+                    if (intervaloSpawn - taxa > 1)
+                        intervaloSpawn -= taxa;
+                    else
+                        intervaloSpawn = 1f;
+                }
+
+
+            }
         }
-    }
+    } 
 
     public void updateVidaUI(int vida)
     {
@@ -219,5 +232,17 @@ public class Game : MonoBehaviour
         }
 
         return posicoes;
+    }
+
+    public void loadGameScene()
+    {
+        print("jogo");
+        SceneManager.LoadScene("Jogo");
+    }
+    public void retrybundaFunk()
+    {
+        retrybunda.SetActive(true);
+
+        textoPontosFinais.text = "Score: " + pontos;
     }
 }

@@ -56,5 +56,9 @@ public class Projetil : MonoBehaviour
             gameRef.addtopool(this);
             gameRef.Pontos++;
         }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

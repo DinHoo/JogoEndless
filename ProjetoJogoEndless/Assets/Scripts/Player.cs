@@ -1,72 +1,89 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    Rigidbody2D body;
+    private Rigidbody2D body;
 
     [SerializeField]
-    Game game_ref;
+    private Game game_ref;
+
     ///////////////////////////////////////
     ///Vida
-    int maxLife = 3;
+    private int maxLife = 3;
+
     [SerializeField]
     private int life;
+
     public int Life
     {
         get { return life; }
 
         set
         {
-            if (value < 0)
+            if (value <= 0)
             {
-                life = 0; //game over acionar
+                life = 0;
+                game_ref.retrybundaFunk();//game over acionar
+                game_ref.vivo = false;
             }
-            else if(value > maxLife)
+            else if (value > maxLife)
             {
                 life = maxLife;
             }
             else
-            life = value;
+                life = value;
             game_ref.updateVidaUI(life);
         }
-
     }
+
     //////////////////////////////////////////////////
     ///mudar sentido
     [SerializeField]
-    bool sentidoDireita;
+    private bool sentidoDireita;
+
     [SerializeField]
-    float sentidox;
+    private float sentidox;
+
     [SerializeField]
-    bool estaNaParede;
+    private bool estaNaParede;
+
     ////////////////////////////////////////////////////
     ///velocidade
     [SerializeField]
-    float aceleracao;
+    private float aceleracao;
+
     [SerializeField]
-    float velocidadeMax;
-    Vector2 velocidade = new Vector2(0, 0);
+    private float velocidadeMax;
+
+    [SerializeField]
+    private float intervaloVel;
+
+    [SerializeField]
+    private float intervaloVel2;
+
+    private float tempo;
+    public Vector2 velocidade = new Vector2(0, 0);
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Life = maxLife;
         toggleSentido();
         body = GetComponent<Rigidbody2D>();
 
-        if(!game_ref || game_ref == null)
+        tempo = Time.time;
+
+        if (!game_ref || game_ref == null)
         {
             game_ref = GameObject.FindGameObjectWithTag("Game").GetComponent<Game>();
         }
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && game_ref.vivo)
             toggleSentido();
 #endif
 
@@ -76,11 +93,11 @@ public class Player : MonoBehaviour
             if(Input.touches[0].phase == TouchPhase.Began)
                 toggleSentido();
         }
-            
+
 #endif
     }
 
-    void toggleSentido()
+    private void toggleSentido()
     {
         sentidoDireita = !sentidoDireita;
         sentidox = (sentidoDireita) ? 1 : -1;
@@ -92,42 +109,48 @@ public class Player : MonoBehaviour
             sentidox = -1;
             */
         estaNaParede = false;
+        //Vector2 velocity5 = new Vector2(sentidox * (0) * Time.deltaTime, 0);
+        //body.velocity = new Vector2(0, 0);
+        tempo = Time.time;
     }
 
     private void FixedUpdate()
     {
         if (!estaNaParede)
         {
-            
-            if (body.velocity.magnitude < velocidadeMax)
+            if (Time.time < tempo + intervaloVel)
             {
-                 velocidade += new Vector2 (sentidox * aceleracao, 0);
-                 body.AddForce(velocidade, ForceMode2D.Impulse);
-                 print(body.velocity.magnitude);
-
+                Vector2 velocity1 = new Vector2(sentidox * (0) * Time.deltaTime, 0);
+                body.velocity = velocity1;
+                print("aceleracao nula " + body.velocity.magnitude);
             }
+            else if (Time.time >= tempo + intervaloVel && Time.time <= tempo + intervaloVel2)
+            {
+                Vector2 velocity2 = new Vector2(sentidox * (aceleracao / 2) * Time.deltaTime, 0);
+                body.velocity = velocity2;
+                print("aceleracao reduzida " + body.velocity.magnitude);
+            }
+            else
+            {
+                Vector2 velocitye = new Vector2(sentidox * (aceleracao) * Time.deltaTime, 0);
+                body.velocity = velocitye;
+                print("aceleracao total" + body.velocity.magnitude);
+            }
+
             /*
-           Vector2 velocity = new Vector2(sentidox * aceleracao * Time.deltaTime, body.velocity.y);
+           Vector2 velocity = new Vector2(sentidox * aceleracao * Time.deltaTime, 0);
            body.AddForce(velocity, ForceMode2D.Impulse);
            */
-            
-
         }
-
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
         if (collision.gameObject.CompareTag("ParedeLateral") && !estaNaParede)
         {
             estaNaParede = true;
             //print("colidiu na parede");
         }
-
-       
-        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -138,6 +161,4 @@ public class Player : MonoBehaviour
             Life--;
         }
     }
-
 }
-
