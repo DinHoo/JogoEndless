@@ -93,6 +93,7 @@ public class Game : MonoBehaviour
         Pontos = pontosInicial; //zerar o score
         vivo = true;
         timerSpawnBase = Time.time;
+        timerQuantidadeBase = Time.time;
         quantidade = 1;
 
         if (GameObject.FindGameObjectWithTag("Spawn")) // Achar os spawns
@@ -237,6 +238,11 @@ public class Game : MonoBehaviour
     public void loadGameScene()
     {
         print("jogo");
+        foreach(GameObject p in GameObject.FindGameObjectsWithTag("Projetil"))
+        {
+            Destroy(p);
+        }
+
         SceneManager.LoadScene("Jogo");
     }
     public void retrybundaFunk()
@@ -244,5 +250,9 @@ public class Game : MonoBehaviour
         retrybunda.SetActive(true);
 
         textoPontosFinais.text = "Score: " + pontos;
+    }
+    public void loadGameMenu()
+    {
+       SceneManager.LoadScene("MenuDoJogo");
     }
 }
